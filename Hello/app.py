@@ -19,6 +19,19 @@ def about():
     return '<h1><a href="https://www.linkedin.com/in/michal-zaitz/">LinkedIn</a>\n {}</h1>' \
            '<h3><a href="/">Strona główna</a></h3>'.format(a / b)
 
+
+# dynamiczny routing
+@app.route('/cantor/<string:currency>/<int:amount>/') # przekazywanie parametrów do "ruty"
+def cantor(currency, amount):
+    message = f'<h1>You selected {currency} and the amount {amount}</h1>'
+    return message
+
+#lab
+@app.route("/cook/<string:co>/<int:kroki>")
+def cook(co, kroki):
+    body = f'<H1>In the receipt {co} you are on step {kroki}</H1>'
+    return body
+
 @app.route('/links')
 def links():
     body = '''<a href="http://www.google.com">Google</a> <br /> 
@@ -36,7 +49,7 @@ if __name__ == '__main__':
 """
 Zmienne środowiskowe
 
-set FLASK_APP=nawa_pliku.py     #w terminalu ustawienie zmiennej środowiskowej dla flaska, defaultowo musi to być app.py
-set FLSK_DEBUG=1                #zmienna która pozwala zmieniać zmiany w apce
+set FLASK_APP=nawa_pliku.py     # w terminalu ustawienie zmiennej środowiskowej dla flaska, defaultowo musi to być app.py
+set FLSK_DEBUG=1                # zmienna która pozwala zmieniać zmiany w apce
 
 """

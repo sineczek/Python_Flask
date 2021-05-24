@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from datetime import datetime
 
 app = Flask(__name__)
@@ -6,11 +6,25 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
+    # querry string - przekaywanie parametrów po ? i łączenie ich & np.: http://127.0.0.1:5000/?color=blue&style=italic
+    # ?color=red&style=italic;">HACKED<h1 style="font-style:italic
+    color = 'black'
+    # print(request.query_string)
+    if 'color' in request.args:
+        color = request.args['color']
+    style = 'normal'
+    if 'style' in request.args:
+        style = request.args['style']
+
+    for p in request.args:
+        print(p, request.args[p])
     time_now = datetime.now().strftime('%H:%M:%S')
-    return '<h1>Flaskowe boje!</h1>\n' \
+
+    return f'<h1 style="color: {color};font-style:{style};">Flaskowe boje!</h1>\n' \
            '<h2>Jest teraz: {}</h2>' \
            '<h3><a href="/about">About</a></h3>' \
            '<h3><a href="/links">Links</a></h3>'.format(time_now)
+
 
 @app.route("/about")
 def about():
@@ -21,16 +35,30 @@ def about():
 
 
 # dynamiczny routing
-@app.route('/cantor/<string:currency>/<int:amount>/') # przekazywanie parametrów do "ruty"
+@app.route('/cantor/<string:currency>/<int:amount>/')  # przekazywanie parametrów do "ruty"
 def cantor(currency, amount):
     message = f'<h1>You selected {currency} and the amount {amount}</h1>'
     return message
 
-#lab
+
+"""# lab
 @app.route("/cook/<string:co>/<int:kroki>")
 def cook(co, kroki):
     body = f'<H1>In the receipt {co} you are on step {kroki}</H1>'
+    return body"""
+
+#Lab2
+@app.route('/cook/<string:receipt>/<int:step>')
+def cook(receipt, step):
+    print(request.query_string)
+    print('----')
+    print(request.args)
+    font_size='100%'
+    if 'font-size' in request.args:
+        font_size = request.args['font-size']
+    body = f'''<H1 style="font-size: { font_size }">In the receipt {receipt} you are on step {step}</H1>'''
     return body
+
 
 @app.route('/links')
 def links():
@@ -38,6 +66,8 @@ def links():
             <a href="http://www.bing.com">Bing!</a>
             <h3><a href="/">Strona główna</a></h3>'''
     return body
+
+
 """    return '<h1>Linki do wyszukiwarek: </h1>' \
            '<h3><a href="http://www.google.com">Google</a></h3>' \
            '<h3><a href="http://www.bing.com">Bing!</a></h3>' \

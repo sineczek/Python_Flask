@@ -47,16 +47,17 @@ def cook(co, kroki):
     body = f'<H1>In the receipt {co} you are on step {kroki}</H1>'
     return body"""
 
-#Lab2
+
+# Lab2
 @app.route('/cook/<string:receipt>/<int:step>')
 def cook(receipt, step):
     print(request.query_string)
     print('----')
     print(request.args)
-    font_size='100%'
+    font_size = '100%'
     if 'font-size' in request.args:
         font_size = request.args['font-size']
-    body = f'''<H1 style="font-size: { font_size }">In the receipt {receipt} you are on step {step}</H1>'''
+    body = f'''<H1 style="font-size: {font_size}">In the receipt {receipt} you are on step {step}</H1>'''
     return body
 
 
@@ -75,6 +76,77 @@ def links():
 # bez tego naley używać "flusk run"
 if __name__ == '__main__':
     app.run()
+
+
+# formularz
+@app.route('/exchange')
+def excgange():
+    body = '''
+        <form id="exchange_form" action="/exchange_process" method="POST">
+            <label for="currency">Currency</label>
+            <input type="text" id="currency" name="currency" value="EUR"><br>
+            <label for="amount">Amount</label>
+            <input type="text" id="amount" name="amount" value="100"><br>
+            <input type="submit" value="Send">
+        </form>
+    '''
+    return body
+
+
+@app.route('/exchange_process', methods=['POST'])
+def exchange_process():
+    currency = 'EUR'
+    if 'currency' in request.form:
+        currency = request.form['currency']
+
+    amount = '100'
+    if 'amount' in request.form:
+        amount = request.form['amount']
+
+    body = f'You want to exchange {amount} {currency}'
+
+    return body
+
+#formularz LAB
+@app.route('/ocen_ciacho')
+def ocen_ciacho():
+    body = ''' 
+        <form id="rating" action="/zapisana_ocena" method="POST"> 
+        <label for=note>What is your note for the receipt?</label><br> 
+        <select id="nore" name="note"> 
+        <option value="5">It is great!</option> 
+        <option value="4">It is very good</option> 
+        <option value="3" selected>It is just good</option> 
+        <option value="2">It was poor</option> 
+        <option value="1">It was horrible!</option> </select><br> 
+        <label for=comment>Write down your comments:</label><br> 
+        <textarea id="comment" name="comment" rows="3" cols="50"> </textarea><br> 
+        <label for="decision">Would you cook it for your family?</label><br> 
+        <input type="checkbox" id="decision" name="decision"><br> 
+        <input type="submit" value="Share my feedback"> </form> '''
+    return body
+
+@app.route('/zapisana_ocena', methods=['POST'])
+def zapisana_ocena():
+
+    note = 3
+    if 'note' in request.form:
+        note = request.form['note']
+
+    comment=''
+    if 'comment' in request.form:
+        comment = request.form['comment']
+
+
+    decision = False
+    if 'decision' in request.form:
+        decision = True
+
+    message = f'''
+        Your rating was: {note}<br>
+        Your comment was: {comment}<br> 
+        Your decision was {decision} '''
+    return message
 
 """
 Zmienne środowiskowe

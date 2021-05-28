@@ -96,8 +96,8 @@ if __name__ == '__main__':
 @app.route('/exchange', methods=['POST', 'GET'])
 def exchange():
     if request.method == 'GET':
-        body = '''
-            <form id="exchange_form" action="/exchange" method="POST">
+        body = f'''
+            <form id="exchange_form" action="{url_for('exchange')}" method="POST">
                 <label for="currency">Currency</label>
                 <input type="text" id="currency" name="currency" value="EUR"><br>
                 <label for="amount">Amount</label>
@@ -196,8 +196,8 @@ def ocena():
             Your decision was {decision} '''
         return message
     else:
-        body = ''' 
-                <form id="rating" action="/ocena" method="POST"> 
+        body = f''' 
+                <form id="rating" action="{url_for('ocena')}" method="POST"> 
                 <label for=note>What is your note for the receipt?</label><br> 
                 <select id="nore" name="note"> 
                 <option value="5">It is great!</option> 

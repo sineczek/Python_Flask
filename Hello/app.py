@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, url_for
 from datetime import datetime
 
 app = Flask(__name__)
@@ -6,6 +6,18 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
+    menu = f"""
+        <a href="{url_for('about')}">About</a><br>
+        <a href="{url_for('links')}">Links</a><br>
+        <br>LABs<br>
+        <a href="{url_for('exchange')}">Kantor</a><br>
+        <a href="{url_for('cantor', currency='PLN', amount=50, _external=True)}">Wymiana (50PLN)</a><br>
+        <a href="{url_for('cook', receipt='ciacho', step=3)}">Przepisy na ciacho</a><br>
+        <a href="{url_for('ocena')}">Ocena Przepisów</a><br>
+        
+""" # odwołujemy się do metody nie do ruty
+    # _external=True - aby był cały adres widoczny
+
     # querry string - przekaywanie parametrów po ? i łączenie ich & np.: http://127.0.0.1:5000/?color=blue&style=italic
     # ?color=red&style=italic;">HACKED<h1 style="font-style:italic
     color = 'black'
@@ -20,11 +32,13 @@ def index():
         print(p, request.args[p])
     time_now = datetime.now().strftime('%H:%M:%S')
 
-    return f'<h1 style="color: {color};font-style:{style};">Flaskowe boje!</h1>\n' \
-           '<h2>Jest teraz: {}</h2>' \
+    return f'<h1 style="color: {color};font-style:{style};">Flaskowe boje!</h1><br><h2>Jest teraz: {time_now}</h2><br><br>{menu}'
+'''
+f'<h1 style="color: {color};font-style:{style};">Flaskowe boje!</h1><br>' \
+           '<h2>Jest teraz: {time_now}</h2>' \
            '<h3><a href="/about">About</a></h3>' \
            '<h3><a href="/links">Links</a></h3>'.format(time_now)
-
+           '''
 
 @app.route("/about")
 def about():
@@ -79,21 +93,34 @@ if __name__ == '__main__':
 
 
 # formularz
-@app.route('/exchange')
-def excgange():
-    body = '''
-        <form id="exchange_form" action="/exchange_process" method="POST">
-            <label for="currency">Currency</label>
-            <input type="text" id="currency" name="currency" value="EUR"><br>
-            <label for="amount">Amount</label>
-            <input type="text" id="amount" name="amount" value="100"><br>
-            <input type="submit" value="Send">
-        </form>
-    '''
-    return body
+@app.route('/exchange', methods=['POST', 'GET'])
+def exchange():
+    if request.method == 'GET':
+        body = '''
+            <form id="exchange_form" action="/exchange" method="POST">
+                <label for="currency">Currency</label>
+                <input type="text" id="currency" name="currency" value="EUR"><br>
+                <label for="amount">Amount</label>
+                <input type="text" id="amount" name="amount" value="100"><br>
+                <input type="submit" value="Send">
+            </form>
+        '''
+        return body
+    else:
+        currency = 'EUR'
+        if 'currency' in request.form:
+            currency = request.form['currency']
+
+        amount = '100'
+        if 'amount' in request.form:
+            amount = request.form['amount']
+
+        body = f'You want to exchange {amount} {currency}'
+
+        return body
 
 
-@app.route('/exchange_process', methods=['POST'])
+"""@app.route('/exchange_process', methods=['POST'])
 def exchange_process():
     currency = 'EUR'
     if 'currency' in request.form:
@@ -105,10 +132,10 @@ def exchange_process():
 
     body = f'You want to exchange {amount} {currency}'
 
-    return body
+    return body"""
 
 #formularz LAB
-@app.route('/ocen_ciacho')
+"""@app.route('/ocen_ciacho')
 def ocen_ciacho():
     body = ''' 
         <form id="rating" action="/zapisana_ocena" method="POST"> 
@@ -146,8 +173,44 @@ def zapisana_ocena():
         Your rating was: {note}<br>
         Your comment was: {comment}<br> 
         Your decision was {decision} '''
-    return message
+    return message"""
 
+@app.route('/ocena', methods=['POST','GET'])
+def ocena():
+    if request.method=='POST':
+        note = 3
+        if 'note' in request.form:
+            note = request.form['note']
+
+        comment = ''
+        if 'comment' in request.form:
+            comment = request.form['comment']
+
+        decision = False
+        if 'decision' in request.form:
+            decision = True
+
+        message = f'''
+            Your rating was: {note}<br>
+            Your comment was: {comment}<br> 
+            Your decision was {decision} '''
+        return message
+    else:
+        body = ''' 
+                <form id="rating" action="/ocena" method="POST"> 
+                <label for=note>What is your note for the receipt?</label><br> 
+                <select id="nore" name="note"> 
+                <option value="5">It is great!</option> 
+                <option value="4">It is very good</option> 
+                <option value="3" selected>It is just good</option> 
+                <option value="2">It was poor</option> 
+                <option value="1">It was horrible!</option> </select><br> 
+                <label for=comment>Write down your comments:</label><br> 
+                <textarea id="comment" name="comment" rows="3" cols="50"> </textarea><br> 
+                <label for="decision">Would you cook it for your family?</label><br> 
+                <input type="checkbox" id="decision" name="decision"><br> 
+                <input type="submit" value="Share my feedback"> </form> '''
+        return body
 """
 Zmienne środowiskowe
 

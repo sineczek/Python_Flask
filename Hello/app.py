@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for
+from flask import Flask, request, url_for, redirect
 from datetime import datetime
 
 app = Flask(__name__)
@@ -117,7 +117,7 @@ def exchange():
 
         body = f'You want to exchange {amount} {currency}'
 
-        return body
+        return redirect(url_for('cantor', amount=amount, currency=currency))
 
 
 """@app.route('/exchange_process', methods=['POST'])
@@ -211,6 +211,26 @@ def ocena():
                 <input type="checkbox" id="decision" name="decision"><br> 
                 <input type="submit" value="Share my feedback"> </form> '''
         return body
+
+
+@app.route('/not_implemented/<message>')
+def not_implemented(message):
+    body = f"""
+    <h1 style="color:red">{message}</h1>
+    """
+    return body
+
+@app.route('/new_receipt')
+def new_receipt():
+    return redirect(url_for('not_implemented', message="Function new_receipt is not ready yet"))
+
+@app.route('/delete_receipt/<name>')
+def delete_receipt(name):
+    return redirect(url_for('not_implemented', message="Function delete_receipt is not ready yet"))
+
+
+
+
 """
 Zmienne środowiskowe
 

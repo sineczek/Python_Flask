@@ -1,5 +1,6 @@
 from flask import Flask, request, url_for, redirect
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
@@ -14,6 +15,8 @@ def index():
         <a href="{url_for('cantor', currency='PLN', amount=50, _external=True)}">Wymiana (50PLN)</a><br>
         <a href="{url_for('cook', receipt='ciacho', step=3)}">Przepisy na ciacho</a><br>
         <a href="{url_for('ocena')}">Ocena Przepisów</a><br>
+        <img src="{url_for('static', filename='dollar.png')}"><br>
+        {os.path.join(app.static_folder, 'dollar.png')}
         
 """ # odwołujemy się do metody nie do ruty
     # _external=True - aby był cały adres widoczny
@@ -228,8 +231,17 @@ def new_receipt():
 def delete_receipt(name):
     return redirect(url_for('not_implemented', message="Function delete_receipt is not ready yet"))
 
+@app.route('/download/<file>')
+def download(file):
+    subpath = 'download/' +file
+    local_file_path = os.path.join(app.static_folder, subpath)
 
-
+    if (os.path.isfile(local_file_path)):
+        print('file found')
+        return redirect(url_for('static', filename=subpath))
+    else:
+        print('sorry file not found')
+        return 'File not found!'
 
 """
 Zmienne środowiskowe

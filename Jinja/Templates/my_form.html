@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hotel room problem form</title>
+        <meta charset="="utf-8">
+        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form id="hotel_form" method="POST" action="{{ url_for('hotel_form') }}">
+            <label for="room_number">Room number</label>
+            <input type="text" name="room_number" id="room_number">
+
+            <label for="guest_name">Guest name</label>
+            <input type="text" name="guest_name" id="guest_name"><br>
+
+            <label for="complain">Complain</label>
+            <textarea rows="3" cols="50" name="complain" id="complain"></textarea><br>
+            <input type="submit" value="Send">
+        </form>
+    </body>
+</html>

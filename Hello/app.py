@@ -202,7 +202,7 @@ def ocena():
         body = f''' 
                 <form id="rating" action="{url_for('ocena')}" method="POST"> 
                 <label for=note>What is your note for the receipt?</label><br> 
-                <select id="nore" name="note"> 
+                <select id="note" name="note"> 
                 <option value="5">It is great!</option> 
                 <option value="4">It is very good</option> 
                 <option value="3" selected>It is just good</option> 

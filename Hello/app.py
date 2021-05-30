@@ -248,5 +248,9 @@ Zmienne środowiskowe
 
 set FLASK_APP=nawa_pliku.py     # w terminalu ustawienie zmiennej środowiskowej dla flaska, defaultowo musi to być app.py
 set FLSK_DEBUG=1                # zmienna która pozwala zmieniać zmiany w apce
+set FLASK_ENV=development       # ustawienie zmiennej na środowisko developerskie, można dodać do activate.bat
 
+inne:
+flask route                     # pokazuje ruty
+flask --host 0.0.0.0            # ustawienie IP, każdy interface sieciowy
 """

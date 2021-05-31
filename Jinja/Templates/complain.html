@@ -7,9 +7,16 @@
     </head>
     <body>
         <h1> Complain about the room {{ room_number }}! </h1><br>
+        <h1> Priority: {{ priority }}</h1>
         <h2 style="font-weight: bold;">Guest name: {{ guest_name }}</h2>
-        <h2 style="font-weight: bold;">Complain</h2>
-        <h2>{{ complain }}</h2>
+        <h2 style="font-weight: bold;">Complain: {{ complain }}</h2>
 
+        {% if priority == 'High'%}
+            <h1 style="color:red">Critical notification content</h1>
+        {% elif priority == 'Medium'%}
+            <h2 style="color:orange">Important notification content</h2>
+        {% elif priority == 'Normal'%}
+            <h3 style="color:green">Notification content</h3>
+        {% endif %}
     </body>
 </html>

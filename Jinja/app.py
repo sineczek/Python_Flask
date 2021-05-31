@@ -14,13 +14,13 @@ def exchange():
         return render_template('exchange.html')
 
     else:
-        currency = 'EUR'
-        if currency in request.form:
-            currency = request.form['currency']
+        currency = request.form['currency']
+        """if currency in request.form:
+            currency = request.form['currency']"""
 
-        amount = '100'
-        if amount in request.form:
-            amount = request.form['amount']
+        amount = request.form['amount']
+        """if amount in request.form:
+            amount = request.form['amount']"""
 
         return render_template('exchange_result.html', currency=currency, amount=amount)
 
@@ -42,6 +42,12 @@ def hotel_form():
         complain = request.form['complain']
         """if complain in request.form:
             complain = request.form['complain']"""
-
-        return render_template('complain.html', room_number=room_number, guest_name=guest_name, complain=complain)
+        priority = request.form['priority']
+        if priority == 'High':
+            priority == 'Critical notification content'
+        elif priority == 'Medium':
+            priority == 'Important notification content'
+        else:
+            priority == 'Notification content'
+        return render_template('complain.html', room_number=room_number, guest_name=guest_name, complain=complain, priority=priority)
 

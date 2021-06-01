@@ -2,25 +2,21 @@
 <html>
     <head>
         <title>Hotel room problem form</title>
-        <meta charset="="utf-8">
-        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <form id="hotel_form" method="POST" action="{{ url_for('hotel_form') }}">
+        <form id="notification_form" method="POST" action="{{ url_for('hotel_form') }}">
             <label for="room_number">Room number</label>
-            <input type="text" name="room_number" id="room_number">
-
-            <label for="priority">Priority</label>
-            <select id="priority" name="priority">
-                <option value="High">High</option>
-                <option value="Medium">Mednium</option>
-                <option value="Normal">Not Urgent</option>
-            </select>
+            <input type="text" name="room_number" id="room_number"><br>
             <label for="guest_name">Guest name</label>
             <input type="text" name="guest_name" id="guest_name"><br>
-
-            <label for="complain">Complain</label>
-            <textarea rows="3" cols="50" name="complain" id="complain"></textarea><br>
+            <label for="notification_text">Notification</label>
+            <textarea rows="4" cols="50" name="notification_text"></textarea><br>
+            <label for="priority">Priority</label>
+            <select name="priority" id="priority">
+                {% for priority in list_of_priorities %}
+                    <option value="{{ priority.code }}" {{ 'selected' if priority.selected}}>{{ priority.description }}</option>
+                {% endfor %}
+            </select><br>
             <input type="submit" value="Send">
         </form>
     </body>

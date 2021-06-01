@@ -6,17 +6,20 @@
         <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <h1> Complain about the room {{ room_number }}! </h1><br>
-        <h1> Priority: {{ priority }}</h1>
-        <h2 style="font-weight: bold;">Guest name: {{ guest_name }}</h2>
-        <h2 style="font-weight: bold;">Complain: {{ complain }}</h2>
-
-        {% if priority == 'High'%}
-            <h1 style="color:red">Critical notification content</h1>
-        {% elif priority == 'Medium'%}
-            <h2 style="color:orange">Important notification content</h2>
-        {% elif priority == 'Normal'%}
-            <h3 style="color:green">Notification content</h3>
+        {% if priority_type.code=='high' %}
+            <h1>Critical notification content</h1>
+        {% elif priority_type.code=='medium' %}
+            <h1>Important notification content</h1>
+        {% else %}
+             <h1>Notification content</h1>
         {% endif %}
+        <ul>
+            <li style="font-weight: bold;">Room number</li>
+            <li>{{ room_number }}</li>
+            <li style="font-weight: bold;">Guest name</li>
+            <li>{{ guest_name }}</li>
+            <li style="font-weight: bold;">Notification</li>
+            <li>{{ notification_text }}</li>
+        </ul>
     </body>
 </html>

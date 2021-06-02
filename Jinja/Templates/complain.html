@@ -6,6 +6,11 @@
         <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        {% for message in get_flashed_messages() %}
+            <div>{{ message }}</dev>
+        {% endfor %}
+
+
         {% if priority_type.code=='high' %}
             <h1>Critical notification content</h1>
         {% elif priority_type.code=='medium' %}

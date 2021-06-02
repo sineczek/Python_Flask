@@ -6,6 +6,9 @@
         <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        {% for message in get_flashed_messages() %}
+            <div>{{ message }}</div>
+        {% endfor %}
         <h1> You selected {{ currency }} and amount {{ amount }}</h1>
 
     {% if currency !='unknown' %}

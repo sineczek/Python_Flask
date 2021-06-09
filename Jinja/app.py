@@ -3,7 +3,9 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'CosTajnegoNaGitHubaNiePrzewidzianego' #często jako zmienna środowiskowa zaczytywana, ew. z bazy danych
+app.config['SECRET_KEY'] = 'CosTajnegoNaGitHubaNiePrzewidzianego'
+# często jako zmienna środowiskowa zaczytywana, ew. z bazy danych
+
 
 # przechowywanie zmiennych walut
 class Currency:
@@ -29,7 +31,7 @@ class CantorOffer:
         self.currencies.append(Currency('JPY', 'Yen', 'japan.png'))
         self.currencies.append(Currency('GBP', 'Pound', 'united-kingdom.png'))
         self.currencies.append(Currency('PLN', 'Polski Złoty', 'poland.png'))
-        self.denied_codes.append('USD') #czyli komunikat tej waluty nie przyjmujemy
+        self.denied_codes.append('USD')  # czyli komunikat tej waluty nie przyjmujemy
 
     def get_by_code(self, code):
         for currency in self.currencies:
@@ -64,7 +66,7 @@ class NotificationPriorities:
 
 @app.route('/')
 def index():
-    return 'This is index'
+    return render_template('index.html')
 
 
 @app.route('/exchange', methods=['POST', 'GET'])
@@ -76,7 +78,7 @@ def exchange():
 
     else:
         # flash("Debug: starting exchange in POST mode") # debug info na www
-        print("Debug: starting exchange in POST mode") #debug info w consoli
+        print("Debug: starting exchange in POST mode")  # debug info w consoli
         currency = 'EUR'  # request.form['currency']
         if 'currency' in request.form:
             currency = request.form['currency']
@@ -125,6 +127,3 @@ def hotel_form():
         return render_template('complain.html',
                                room_number=room_number, guest_name=guest_name,
                                notification_text=notification_text, priority_type=priority_type)
-
-
-

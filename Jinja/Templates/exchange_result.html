@@ -1,22 +1,14 @@
-{% from "macros.html" import show_all_flash_message, show_flash_message %}
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Cantor</title>
-        <meta charset="utf-8">
-        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-            <h1>This is Exchange Result page.</h1><br>
+{% extends "base.html" %}
 
-    {{ show_all_flash_message() }}
+{% block body_header %}
+    You selected {{ currency }} and amount {{ amount }}
+{% endblock %}
 
-        <h1 id="result_text"> You selected {{ currency }} and amount {{ amount }}</h1>
-
+{% block body_content %}
+    {{ super() }}
     {% if currency !='unknown' %}
         <img src="{{ url_for('static', filename=currency_info.flag) }}" id="flag">
     {% else %}
         <p id="unknown_currency">Sorry! this currency is unknown for us.</p>
     {% endif %}
-    </body>
-</html>
+{% endblock %}

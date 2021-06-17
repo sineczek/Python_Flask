@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Cantor</title>
-        <meta charset="="utf-8">
-        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <h1>This is Exchange page.</h1><br>
+{% extends "base.html" %}
+
+{% block body_header %}
+This is Exchange page.
+{% endblock %}
+
+{% block body_content %}
+    {{ super() }}
         <form id="exchange_form" action="{{ url_for('exchange')}}" method="post">
             <label for="currency">Currency</label>
             <select id="currency" name="currency">
@@ -18,5 +17,4 @@
             <input type="text" id="amount" name="amount" value="100"><br>
             <input type="submit" id="submit" value="Send">
         </form>
-    </body>
-</html>
+{% endblock %}

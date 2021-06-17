@@ -9,7 +9,6 @@ class BasePage:
     def url(self):
         return 'http://127.0.0.1:5000'
 
-
     @property
     def header(self):
         return self.driver.find_element(*BasePageLocators.HEADER)

@@ -1,15 +1,11 @@
-{% from "macros.html" import show_flash %}
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Complain</title>
-        <meta charset="utf-8">
-        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
+{% extends "base.html" %}
 
-        {{ show_flash() }}
+{% block body_header %}
+        This is Hotel Complain page.
+{% endblock %}
 
+{% block body_content %}
+    {{ super() }}
         {% for message in get_flashed_messages() %}
             <div> {{ message }} </div>
         {% endfor %}
@@ -30,5 +26,5 @@
             <li style="font-weight: bold;">Notification</li>
             <li>{{ notification_text }}</li>
         </ul>
-    </body>
-</html>
+
+{% endblock %}

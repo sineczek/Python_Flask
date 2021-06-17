@@ -6,3 +6,7 @@ class ExchangePageLocators:
     CURRENCY = By.ID, 'currency'
     AMOUNT = By.ID, 'amount'
     SUBMIT = By.ID, 'submit'
+
+
+
+

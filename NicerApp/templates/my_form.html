@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block body_header %}
+        This is Hotel Complain page.
+{% endblock %}
+
+{% block body_content %}
+    {{ super() }}
+        <form id="notification_form" method="POST" action="{{ url_for('hotel_form') }}">
+            <label for="room_number">Room number</label>
+            <input type="text" name="room_number" id="room_number"><br>
+            <label for="guest_name">Guest name</label>
+            <input type="text" name="guest_name" id="guest_name"><br>
+            <label for="notification_text">Notification</label>
+            <textarea rows="4" cols="50" name="notification_text"></textarea><br>
+            <label for="priority">Priority</label>
+            <select name="priority" id="priority">
+                {% for priority in list_of_priorities %}
+                    <option value="{{ priority.code }}" {{ 'selected' if priority.selected}}>{{ priority.description }}</option>
+                {% endfor %}
+            </select><br>
+            <input type="submit" value="Send">
+        </form>
+{% endblock %}}

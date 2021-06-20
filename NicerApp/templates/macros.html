@@ -1,5 +1,8 @@
 {% macro show_flash_message(message) %}
-    <div style="color: red", id="flash_message"> {{ message }} </div>
+    <div class="alert alert-warning alert-dismissable fade show" role="alert">
+        <strong>{{ message }} </strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 {% endmacro %}
 
 {% macro show_all_flash_message() %}

@@ -1,13 +1,28 @@
-from flask import Flask, render_template, url_for, request, flash
+from flask import Flask, render_template, url_for, request, flash, g
 from datetime import datetime
+import sqlite3
+
+# konfiguracja sqlite3
+app_info = {'db_file': '/Users/sinq/nauka/Python_Flask/NicerApp/data/cantor.db'}
+
 
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'CosTajnegoNaGitHubaNiePrzewidzianego'
-# często jako zmienna środowiskowa zaczytywana, ew. z bazy danych
+
+def get_db():
+    if not hasattr(g, 'sqlite_db'):
+        conn = sqlite3.connect(app_info['db_file'])
+        conn.row_factory = sqlite3.Row
+        g.sqlite_db = conn
+    return g.sqlite_db
+
+@app.teardown_appcontext
+def close_db(error):
+    if hasattr(g, 'sqlite3_db'):
+        g.sqlite_db.close()
 
 
-# przechowywanie zmiennych walut
 class Currency:
 
     def __init__(self, code, name, flag):
@@ -15,7 +30,7 @@ class Currency:
         self.name = name
         self.flag = flag
 
-    def __repr__(self):  # textowa reprezentacja wartości z class'y
+    def __repr__(self):
         return '<Currency {}>'.format(self.code)
 
 
@@ -31,7 +46,7 @@ class CantorOffer:
         self.currencies.append(Currency('JPY', 'Yen', 'japan.png'))
         self.currencies.append(Currency('GBP', 'Pound', 'united-kingdom.png'))
         self.currencies.append(Currency('PLN', 'Polski Złoty', 'poland.png'))
-        self.denied_codes.append('USD')  # czyli komunikat tej waluty nie przyjmujemy
+        self.denied_codes.append('USD')
 
     def get_by_code(self, code):
         for currency in self.currencies:
@@ -77,22 +92,25 @@ def exchange():
         return render_template('exchange.html', offer=offer)
 
     else:
-        # flash("Debug: starting exchange in POST mode") # debug info na www
-        print("Debug: starting exchange in POST mode")  # debug info w consoli
-        currency = 'EUR'  # request.form['currency']
+        print("Debug: starting exchange in POST mode")
+        currency = 'EUR'
         if 'currency' in request.form:
             currency = request.form['currency']
+        amount = 100
+        if 'amount' in request.form:
+            amount = request.form['amount']
 
         if currency in offer.denied_codes:
             flash('The currency {} cannot be accepted'.format(currency))
         elif offer.get_by_code('unknown') == 'unknown':
             flash('The selected currency is unknown and cannot be accepted')
         else:
+            db = get_db()
+            sql_command = 'insert into transactions(currency, amount, user) values(?, ?, ?)'
+            db.execute(sql_command, [currency, amount, 'admin'])
+            db.commit()
             flash('Requested to exchange {} was accepted'.format(currency))
 
-        amount = 100  # request.form['amount']
-        if 'amount' in request.form:
-            amount = request.form['amount']
 
         return render_template('exchange_result.html', currency=currency,
                                amount=amount, currency_info=offer.get_by_code(currency))
@@ -127,6 +145,7 @@ def hotel_form():
         return render_template('complain.html',
                                room_number=room_number, guest_name=guest_name,
                                notification_text=notification_text, priority_type=priority_type)
+
 
 if __name__ == '__main__':
     app.run()

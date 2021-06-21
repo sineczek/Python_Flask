@@ -1,20 +1,20 @@
 {% macro show_flash_message(message) %}
-    <div class="alert alert-warning alert-dismissable fade show" role="alert">
-        <strong>{{ message }} </strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+<div class="alert alert-warning alert-dismissable fade show" role="alert">
+    <strong>{{ message }} </strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 {% endmacro %}
 
 {% macro show_all_flash_message() %}
-    {% for message in get_flashed_messages() %}
-        {{ show_flash_message(message) }}
-    {% endfor %}
+{% for message in get_flashed_messages() %}
+{{ show_flash_message(message) }}
+{% endfor %}
 {% endmacro %}
 
 {% macro show_flash() %}
-    <ul>
+<ul>
     {% for message in get_flashed_messages() %}
-        <li>{{ message }}</li>
+    <li>{{ message }}</li>
     {% endfor %}
-    </ul>
+</ul>
 {% endmacro %}

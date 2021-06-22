@@ -5,10 +5,10 @@ import sqlite3
 # konfiguracja sqlite3
 app_info = {'db_file': '/Users/sinq/nauka/Python_Flask/NicerApp/data/cantor.db'}
 
-
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'CosTajnegoNaGitHubaNiePrzewidzianego'
+
 
 def get_db():
     if not hasattr(g, 'sqlite_db'):
@@ -16,6 +16,7 @@ def get_db():
         conn.row_factory = sqlite3.Row
         g.sqlite_db = conn
     return g.sqlite_db
+
 
 @app.teardown_appcontext
 def close_db(error):
@@ -81,7 +82,7 @@ class NotificationPriorities:
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', active_menu='home')
 
 
 @app.route('/exchange', methods=['POST', 'GET'])
@@ -89,7 +90,7 @@ def exchange():
     offer = CantorOffer()
     offer.load_offer()
     if request.method == 'GET':
-        return render_template('exchange.html', offer=offer)
+        return render_template('exchange.html', active_menu='exchange', offer=offer)
 
     else:
         print("Debug: starting exchange in POST mode")
@@ -111,8 +112,7 @@ def exchange():
             db.commit()
             flash('Requested to exchange {} was accepted'.format(currency))
 
-
-        return render_template('exchange_result.html', currency=currency,
+        return render_template('exchange_result.html', active_menu='exchange', currency=currency,
                                amount=amount, currency_info=offer.get_by_code(currency))
 
 
@@ -122,7 +122,8 @@ def hotel_form():
     notification_priorities.load_priorities()
 
     if request.method == 'GET':
-        return render_template('my_form.html', list_of_priorities=notification_priorities.list_of_priorities)
+        return render_template('my_form.html', active_menu='hotel_form',
+                               list_of_priorities=notification_priorities.list_of_priorities)
 
     else:
         room_number = request.form['room_number'] if 'room_number' in request.form else ''
@@ -142,9 +143,19 @@ def hotel_form():
             priority = 'high'
             flash('Rising priority from medium to high')
 
-        return render_template('complain.html',
+        return render_template('complain.html', active_menu='hotel_menu',
                                room_number=room_number, guest_name=guest_name,
                                notification_text=notification_text, priority_type=priority_type)
+
+
+@app.route('/history')
+def history():
+    db = get_db()
+    sql_command = 'select id, currency, amount, trans_date from transactions;'
+    cur = db.execute(sql_command)  # kursor wykonujący polecenie i przechowujący w zmiennejk
+    transactions = cur.fetchall()  # pobieranie wszystkich danych z zapytania
+
+    return render_template('history.html', active_menu='history', transactions=transactions)
 
 
 if __name__ == '__main__':

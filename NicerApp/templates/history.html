@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+Transaction's history. %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <table class="table">
+        <thread>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Date</th>
+                <th scope="col">Operations</th>
+            </tr>
+        </thread>
+        <tbody>
+            {% for transaction in transactions %}
+        <tr>
+            <th scope="row">{{ transaction.id }}</th>
+            <td>{{ transaction.currency }}</td>
+            <td>{{ transaction.amount }}</td>
+            <td>{{ transaction.trans_date }}</td>
+            <td>
+                <a herf="a" class="btn btn-primary btn-sm" role="button"> Actions...</a>
+                <a herf="a" class="btn btn-success btn-sm" role="button"> Edit...</a>
+                <a herf="a" class="btn btn-danger btn-sm" role="button"> Delete...</a>
+
+            </td>
+        </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+
+{% endblock %}

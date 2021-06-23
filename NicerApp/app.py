@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, flash, g
+from flask import Flask, render_template, url_for, request, flash, g, redirect
 from datetime import datetime
 import sqlite3
 
@@ -156,6 +156,16 @@ def history():
     transactions = cur.fetchall()  # pobieranie wszystkich danych z zapytania
 
     return render_template('history.html', active_menu='history', transactions=transactions)
+
+
+@app.route('/delete_transaction/<int:transaction_id>')
+def delete_transaction(transaction_id):
+    db = get_db()
+    sql_statement = 'delete from transactions where id = ?;'
+    db.execute(sql_statement, [transaction_id])
+    db.commit()
+
+    return redirect(url_for('history'))
 
 
 if __name__ == '__main__':

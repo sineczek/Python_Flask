@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div calss="row justify-content-start">
+    <div class="col-1"></div>
+    <div class="col-6 h1">Edit transaction.</div>
+</div>
+<hr>
+<div class="container">
+
+    <form id="edit_transaction" action="{{ url_for('edit_transaction', transaction_id=transaction.id) }}" method="POST">
+        <div class="form-group row h5">
+            <div class="form-group mx-sm-3 mb-2"><label for="currency">Currency</label></div>
+            <div class="col-4 align-middle">
+                <select id="currency" name="currency" class="form-select">
+                    {% for currency in offer.currencies %}
+                    <option value="{{ currency.code }} {{ 'selected' if transaction.currency==currency.code }}">{{
+                        currency.name }}
+                    </option>
+                    {% endfor %}
+                </select><br>
+            </div>
+        </div>
+        <div class="form-group row h5">
+            <div class="form-group mx-sm-3 mb-2"><label for="amount">Amount</label></div>
+            <div class="col-4">
+                <input type="text" id="amount" name="amount" value={{ transaction.amount }} class="form-control"><br>
+            </div>
+            <div class="row justify-content-start">
+                <div class="col-1"></div>
+                <div class="col-2"><input type="submit" value="Send" class="btn btn-primary"></div>
+            </div>
+
+        </div>
+    </form>
+</div>
+<hr>
+
+{% endblock %}

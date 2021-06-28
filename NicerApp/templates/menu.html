@@ -19,7 +19,14 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ 'active' if active_menu=='about' }}" href="#">About</a>
-                </li>            </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if active_menu=='login' }}" href="{{ url_for('login') }}" tabindex="-1">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if active_menu=='logout' }}" href="{{ url_for('logout') }}" tabindex="-1">Logout {{ session['user'] if 'user' in session }}</a>
+                </li>
+            </ul>
             <form class="d-flex">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>

@@ -311,6 +311,71 @@ def edit_transaction(transaction_id):
 
         return redirect(url_for('history'))
 
+@app.route('/users')
+def users():
+    return 'not implemented'
+
+@app.route('/user_status_change/<action>/<user_name>')
+def user_status_change():
+    return 'not implemented'
+
+@app.route('/edit_user/<user_name>')
+def edit_user():
+    return 'not implemented'
+
+@app.route('/user_delete/<user_name>')
+def delete_user():
+    return 'not implemented'
+
+@app.route('/new_user', methods=['POST', 'GET'])
+def new_user():
+    if not 'user' in session:
+        return redirect(url_for('login'))
+    login = session['user']
+
+    db = get_db()
+    message = None
+    user = {}
+
+    if request.method == 'GET':
+        return render_template('new_user.html', active_menu='users', user=user)
+    else:
+        user['user_name'] = '' if not 'user_name' in request.form else request.form['user_name']
+        user['email'] = '' if not 'email' in request.form else request.form['email']
+        user['user_pass'] = '' if not 'user_pass' in request.form else request.form['user_pass']
+
+        cursor = db.execute('select count(*) as cnt from users where name = ?', [user['user_name']])
+        record = cursor.fetchone()
+        is_user_name_unique = (record['cnt'] == 0)
+
+        cursor = db.execute('select count(*) as cnt from users where email = ?', [user['email']])
+        record = cursor.fetchone()
+        is_user_email_unique = (record['cnt'] == 0)
+
+        if user['user_name'] == '':
+            message = 'Name cannot be empty'
+        elif user['email'] == '':
+            message = 'email cannot be empty'
+        elif user['user_pass'] == '':
+            message = 'Password cannot be empty'
+        elif not is_user_name_unique:
+            message = 'User with the name {} already exists'.format(user['user_name'])
+        elif not is_user_email_unique:
+            message = 'User with the email {} alresdy exists'.format(user['email'])
+
+        if not message:
+            user_pass = UserPass(user['user_name'], user['user_pass'])
+            password_hash = user_pass.hash_password()
+            sql_statement = '''insert into users(name, email, password, is_active, is_admin)
+                           values(?,?,?, True, False);'''
+            db.execute(sql_statement, [user['user_name'], user['email'], password_hash])
+            db.commit()
+            flash('User {} created'.format(user['user_name']))
+            return redirect(url_for('users'))
+        else:
+            flash('Correct error: {}'.format(message))
+            return render_template('new_user.html', active_menu='users', user=user)
+
 
 if __name__ == '__main__':
     app.run()

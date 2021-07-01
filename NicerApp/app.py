@@ -313,19 +313,64 @@ def edit_transaction(transaction_id):
 
 @app.route('/users')
 def users():
-    return 'not implemented'
+    db = get_db()
+    sql_statement = 'select id, name, email, is_admin, is_active from users;'
+    cur = db.execute(sql_statement)
+    users = cur.fetchall()
+
+    return render_template('users.html', active_menu='users', users=users)
 
 @app.route('/user_status_change/<action>/<user_name>')
 def user_status_change():
     return 'not implemented'
 
-@app.route('/edit_user/<user_name>')
-def edit_user():
-    return 'not implemented'
+@app.route('/edit_user/<user_name>', methods = ['POST','GET'])
+def edit_user(user_name):
+    db = get_db()
+    sql_statement = 'select name, email from users where name = ?;'
+    cur = db.execute(sql_statement, [user_name])
+    user = cur.fetchone()
+    message = None
+
+    if user == None:
+        flash('No such user')
+        return redirect(url_for('users'))
+
+    if request.method == 'GET':
+        return render_template('edit_user.html', active_menu='users', user=user)
+    else:
+        new_email = '' if 'email' not in request.form else request.form["email"]
+        new_password = '' if 'user_pass' not in request.form else request.form['user_pass']
+
+        if new_email != user['email']:
+            sql_statement = "update users set email = ? where name = ?"
+            db.execute(sql_statement, [new_email, user_name])
+            db.commit()
+            flash('Email was changed')
+
+        if new_password != '':
+            user_pass = UserPass(user_name, new_password)
+            sql_statement = "update users set password = ?  where name = ?"
+            db.execute(sql_statement, [user_pass.hash_password(), user_name])
+            db.commit()
+            flash('Password was changed')
+
+        return redirect(url_for('users'))
+
+
 
 @app.route('/user_delete/<user_name>')
-def delete_user():
-    return 'not implemented'
+def delete_user(user_name):
+    if not 'user' in session:
+        return redirect(url_for('login'))
+    login = session['user']
+
+    db = get_db()
+    sql_statement = 'delete from users where name = ? and name <> ?;'
+    db.execute(sql_statement, [user_name, login])
+    db.commit()
+
+    return redirect(url_for('users'))
 
 @app.route('/new_user', methods=['POST', 'GET'])
 def new_user():

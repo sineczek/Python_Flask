@@ -1,0 +1,10 @@
+<form method="POST" action="{{ url_for('index') }}">
+
+    {{ form.csrf_token }}
+    {{ form.train_number.label }}   {{ form.train_number }} <br/>
+    {{ form.is_delayed.label }}     {{ form.is_delayed }} <br/>
+    {{ form.delay_minutes.label }}  {{ form.delay_minutes }} <br/>
+    {{ form.delay_reason.label }}   {{ form.delay_reason }} <br/>
+
+    <input type="submit" value="GO!">
+</form>

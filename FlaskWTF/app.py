@@ -7,6 +7,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'co§n1eNaGiT4'
 
 
+
+class Book:
+    def __init__(self, title, amount, available):
+        self.title = title
+        self.amount = amount
+        self.available = available
+
+
 class BookForm(FlaskForm):
 
     def validate_amount_even(form, field):
@@ -17,22 +25,28 @@ class BookForm(FlaskForm):
     title = StringField('Book title', validators=[DataRequired('Enter book title'),
                                                   Length(min=5,
                                                          max=50,
-                                                         message="The title must have 5 - 50 characters")])
+                                                         message="The title must have 5 - 50 characters")],
+                        default='Unknown')
     amount = IntegerField('Amount', validators=[DataRequired('Enter amount'),
-                          validate_amount_even])
+                          validate_amount_even],
+                          default=1)
     available = BooleanField('Available')
 
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    book = Book(title='How to take a nice photo', amount=11, available=True)
+    #form = BookForm(title='European Kings', amount=1, available=True)
+    form = BookForm(obj=book)
 
-    form = BookForm(csrf_enabled=True)
     if form.validate_on_submit():
+
+        form.populate_obj(book)
         return f'''<h1>Hello</h1>
                     <ul>
-                        <li>{form.title.label}: {form.title.data}</li>
-                        <li>{form.amount.label}: {form.amount.data}</li>
-                        <li>{form.available.label}: {form.available.data}</li>
+                        <li>{form.title.label}: {book.title}</li>
+                        <li>{form.amount.label}: {book.amount}</li>
+                        <li>{form.available.label}: {book.available}</li>
                     </ul>'''
     return render_template('index.html', form=form)
 
